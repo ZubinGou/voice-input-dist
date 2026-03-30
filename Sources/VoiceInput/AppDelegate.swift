@@ -16,6 +16,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var enableMenuItem: NSMenuItem!
     private var llmMenuItem: NSMenuItem!
     private lazy var settingsWindow = SettingsWindow()
+    private lazy var keySettingsWindow = KeySettingsWindow(keyMonitor: keyMonitor)
     private var languageItems: [NSMenuItem] = []
     private var selectedLocaleCode: String {
         get { UserDefaults.standard.string(forKey: "selectedLocaleCode") ?? "zh-CN" }
@@ -185,15 +186,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         menu.addItem(.separator())
 
+        let keyItem = NSMenuItem(title: "Key Settings…", action: #selector(openKeySettings), keyEquivalent: "")
+        keyItem.target = self
+        menu.addItem(keyItem)
+
+        menu.addItem(.separator())
+
         let langItem = NSMenuItem(title: "Language", action: nil, keyEquivalent: "")
         let langMenu = NSMenu()
         let languages: [(String, String)] = [
             ("System Default", ""),
             ("English (US)", "en-US"),
-            ("中文 (简体)", "zh-CN"),
-            ("中文 (繁體)", "zh-TW"),
-            ("日本語", "ja-JP"),
-            ("한국어", "ko-KR"),
+            ("Chinese (Simplified)", "zh-CN"),
+            ("Chinese (Traditional)", "zh-TW"),
+            ("Japanese", "ja-JP"),
+            ("Korean", "ko-KR"),
         ]
         for (name, code) in languages {
             let item = NSMenuItem(title: name, action: #selector(changeLanguage(_:)), keyEquivalent: "")
@@ -217,7 +224,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         llmMenu.addItem(.separator())
 
-        let settingsItem = NSMenuItem(title: "Settings...", action: #selector(openLLMSettings), keyEquivalent: "")
+        let settingsItem = NSMenuItem(title: "API Settings…", action: #selector(openLLMSettings), keyEquivalent: "")
         settingsItem.target = self
         llmMenu.addItem(settingsItem)
 
@@ -275,6 +282,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let refiner = LLMRefiner.shared
         refiner.isEnabled.toggle()
         llmMenuItem.state = refiner.isEnabled ? .on : .off
+    }
+
+    @objc private func openKeySettings() {
+        keySettingsWindow.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     @objc private func openLLMSettings() {

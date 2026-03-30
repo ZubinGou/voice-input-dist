@@ -6,7 +6,12 @@ A macOS menu-bar application that converts speech to text in real time using App
 
 https://github.com/user-attachments/assets/3228f78a-f035-447d-98ef-8826798a122c
 
+## Changes
 
+Added configurable trigger key and hold-to-record support (menubar → **Key Settings…**):
+
+- Any key can be set as the trigger, including modifier keys (Right ⌥, Right ⌘, etc.)
+- Hold threshold: when set > 0, the key must be held alone for that duration before recording starts — combos like ⌥+key always pass through unaffected
 
 ## Requirements
 

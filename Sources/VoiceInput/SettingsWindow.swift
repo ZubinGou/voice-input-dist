@@ -91,21 +91,16 @@ final class SettingsWindow: NSPanel {
 
     @objc private func test() {
         applyFields()
-
         let refiner = LLMRefiner.shared
         guard refiner.isConfigured else {
             showStatus("API key is empty", success: false)
             return
         }
-
         showStatus("Testing...", success: nil)
-
         refiner.refine("Hello, this is a test.", force: true) { [weak self] result in
             switch result {
-            case .success(let text):
-                self?.showStatus("OK: \(text)", success: true)
-            case .failure(let error):
-                self?.showStatus(error.localizedDescription, success: false)
+            case .success(let text):  self?.showStatus("OK: \(text)", success: true)
+            case .failure(let error): self?.showStatus(error.localizedDescription, success: false)
             }
         }
     }
@@ -125,12 +120,9 @@ final class SettingsWindow: NSPanel {
     private func showStatus(_ text: String, success: Bool?) {
         statusLabel.stringValue = text
         switch success {
-        case .some(true):
-            statusLabel.textColor = .systemGreen
-        case .some(false):
-            statusLabel.textColor = .systemRed
-        case .none:
-            statusLabel.textColor = .secondaryLabelColor
+        case .some(true):  statusLabel.textColor = .systemGreen
+        case .some(false): statusLabel.textColor = .systemRed
+        case .none:        statusLabel.textColor = .secondaryLabelColor
         }
     }
 }
