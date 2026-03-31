@@ -113,7 +113,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         finalResultTimer?.invalidate()
         finalResultTimer = nil
 
-        let text = lastPartialResult.trimmingCharacters(in: .whitespacesAndNewlines)
+        var text = lastPartialResult.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // If primary recognizer produced nothing, try the secondary (en-US) result
+        if text.isEmpty, let fallback = speechEngine.secondaryResult() {
+            text = fallback
+        }
+
+        // Release recognition resources immediately
+        speechEngine.finalize()
 
         guard !text.isEmpty else {
             overlayPanel.dismiss()
